@@ -246,7 +246,9 @@ export default function VehicleGeneralInformation({
                     ? 'Premium'
                     : vehicle.info.premium.type === 'money'
                       ? 'Shop'
-                      : 'Badge'
+                      : vehicle.info.premium.type === 'badge'
+                        ? 'Badge'
+                        : 'Quest'
                 : 'Dev-spawner only'}
             </Stat>
 

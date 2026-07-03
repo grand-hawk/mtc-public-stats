@@ -16,6 +16,7 @@ const premiumConfig: Record<
   coins: { color: 'yellow.400', icon: MdWorkspacePremium },
   money: { color: 'green.400', icon: MdOutlineAttachMoney },
   badge: { color: 'purple.400', icon: IoMdGift },
+  quest: { color: 'purple.400', icon: IoMdGift },
 };
 
 interface PremiumIconProps {
