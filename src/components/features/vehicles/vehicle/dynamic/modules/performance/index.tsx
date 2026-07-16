@@ -88,7 +88,9 @@ export default function Performance() {
 
   if (!driveData || !metrics) return null;
 
-  const { acceleration, braking, driveline, grades, pivot } = metrics;
+  // `reverse` is required by the schema but absent from published data — keep it
+  // optional-chained until the payload catches up, or every vehicle here throws.
+  const { acceleration, braking, driveline, grades, pivot, reverse } = metrics;
   const gradeSpeeds = [
     [10, grades.at10.kmh],
     [30, grades.at30.kmh],
@@ -113,6 +115,8 @@ export default function Performance() {
               <AccelerationChart
                 curve={acceleration.curve}
                 intervalSeconds={acceleration.curveIntervalSeconds}
+                reverseCurve={reverse?.curve}
+                reverseIntervalSeconds={reverse?.curveIntervalSeconds}
               />
             )}
 
@@ -138,6 +142,14 @@ export default function Performance() {
                 <StatsCell>0–Vmax</StatsCell>
                 <StatsCell>
                   <Seconds value={acceleration.toTop} />
+                </StatsCell>
+              </StatsRow>
+            )}
+            {reverse?.toTop !== undefined && (
+              <StatsRow>
+                <StatsCell>0–Vmax (reverse)</StatsCell>
+                <StatsCell>
+                  <Seconds value={reverse.toTop} />
                 </StatsCell>
               </StatsRow>
             )}
