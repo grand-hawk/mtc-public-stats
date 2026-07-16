@@ -3,6 +3,7 @@ import React from 'react';
 import VehicleArmor from '@/components/features/vehicles/vehicle/armor';
 import APS from '@/components/features/vehicles/vehicle/dynamic/modules/aps';
 import Defenses from '@/components/features/vehicles/vehicle/dynamic/modules/defenses';
+import Performance from '@/components/features/vehicles/vehicle/dynamic/modules/performance';
 import Turrets from '@/components/features/vehicles/vehicle/dynamic/modules/turrets';
 import Vehicle from '@/components/features/vehicles/vehicle/dynamic/modules/vehicle';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -18,6 +19,7 @@ export default function VehicleDynamicModules() {
   return (
     <>
       <Vehicle />
+      <Performance />
       <VehicleArmor />
       <Defenses />
       <APS />

@@ -37,6 +37,11 @@ function computeMarkers(
   // Powertrain section
   if (driveData) markers.push({ name: 'Powertrain', slug: 'powertrain' });
 
+  // Performance section
+  if (driveData?.data.metrics) {
+    markers.push({ name: 'Performance', slug: 'performance' });
+  }
+
   // Armour section
   if (vehicle.content?.Armour) markers.push({ name: 'Armour', slug: 'armour' });
 

@@ -1,0 +1,251 @@
+import { FormatNumber, Stack } from '@chakra-ui/react';
+import dynamic from 'next/dynamic';
+import React from 'react';
+
+import InfoTooltip from '@/components/common/infoTooltip';
+import { XSSpinner } from '@/components/common/spinners';
+import SectionMarker from '@/components/wiki/sectionMarker';
+import { StatsCell, StatsRoot, StatsRow } from '@/components/wiki/stats';
+import TitledCard from '@/components/wiki/titledCard';
+import { useDynamicData } from '@/hooks/providers/dynamicData';
+import { getOneModuleOfType } from '@/utils/alterations';
+
+const AccelerationChart = dynamic(
+  () =>
+    import('@/components/features/vehicles/vehicle/dynamic/modules/performance/chart'),
+  {
+    ssr: false,
+    loading: () => <XSSpinner />,
+  },
+);
+
+const degreesOfGrade = (percent: number) =>
+  (Math.atan(percent / 100) * 180) / Math.PI;
+
+function Gradient({ degrees, percent }: { degrees: number; percent: number }) {
+  return (
+    <>
+      <FormatNumber
+        maximumFractionDigits={0}
+        style="unit"
+        unit="percent"
+        value={percent}
+      />{' '}
+      (
+      <FormatNumber
+        maximumFractionDigits={0}
+        style="unit"
+        unit="degree"
+        unitDisplay="narrow"
+        value={degrees}
+      />
+      )
+    </>
+  );
+}
+
+function Seconds({ value }: { value: number }) {
+  return (
+    <FormatNumber
+      maximumFractionDigits={1}
+      style="unit"
+      unit="second"
+      value={value}
+    />
+  );
+}
+
+function Group({
+  children,
+  moduleId,
+  title,
+}: {
+  children: React.ReactNode;
+  moduleId: string;
+  title: string;
+}) {
+  return (
+    <TitledCard
+      backgroundColor="bg.muted"
+      closedByDefault
+      collapsible
+      headingAs="h3"
+      innerPadding={2}
+      moduleId={moduleId}
+      title={title}
+      withAnchor={`Performance ${title}`}
+    >
+      <StatsRoot>{children}</StatsRoot>
+    </TitledCard>
+  );
+}
+
+export default function Performance() {
+  const { assembledModules } = useDynamicData();
+
+  const driveData = getOneModuleOfType('DriveData', assembledModules);
+  const metrics = driveData?.data.metrics;
+
+  if (!driveData || !metrics) return null;
+
+  const { acceleration, braking, driveline, grades, pivot } = metrics;
+  const gradeSpeeds = [
+    [10, grades.at10.kmh],
+    [30, grades.at30.kmh],
+    [60, grades.at60.kmh],
+  ] as const;
+
+  return (
+    <>
+      <SectionMarker name="Performance" />
+
+      <TitledCard
+        as="section"
+        collapsible
+        innerPadding={4}
+        moduleId={driveData.id}
+        title="Performance"
+        withAnchor
+      >
+        <Stack gap={4}>
+          {acceleration.curve.length > 0 &&
+            !!acceleration.curveIntervalSeconds && (
+              <AccelerationChart
+                curve={acceleration.curve}
+                intervalSeconds={acceleration.curveIntervalSeconds}
+              />
+            )}
+
+          <StatsRoot>
+            {acceleration.to30 !== undefined && (
+              <StatsRow>
+                <StatsCell>0–30 km/h</StatsCell>
+                <StatsCell>
+                  <Seconds value={acceleration.to30} />
+                </StatsCell>
+              </StatsRow>
+            )}
+            {acceleration.to50 !== undefined && (
+              <StatsRow>
+                <StatsCell>0–50 km/h</StatsCell>
+                <StatsCell>
+                  <Seconds value={acceleration.to50} />
+                </StatsCell>
+              </StatsRow>
+            )}
+            {acceleration.toTop !== undefined && (
+              <StatsRow>
+                <StatsCell>0–Vmax</StatsCell>
+                <StatsCell>
+                  <Seconds value={acceleration.toTop} />
+                </StatsCell>
+              </StatsRow>
+            )}
+            {driveline.shiftSeconds > 0 && (
+              <StatsRow>
+                <StatsCell>Shift time</StatsCell>
+                <StatsCell>
+                  <Seconds value={driveline.shiftSeconds} />
+                </StatsCell>
+              </StatsRow>
+            )}
+          </StatsRoot>
+
+          <Group moduleId={driveData.id} title="Braking">
+            <StatsRow>
+              <StatsCell>Deceleration</StatsCell>
+              <StatsCell>
+                <FormatNumber
+                  maximumFractionDigits={1}
+                  value={braking.decelMs2}
+                />{' '}
+                m/s²
+              </StatsCell>
+            </StatsRow>
+            <StatsRow>
+              <StatsCell>Stopping distance from Vmax</StatsCell>
+              <StatsCell>
+                <FormatNumber
+                  maximumFractionDigits={1}
+                  style="unit"
+                  unit="meter"
+                  value={braking.stopFromTopMeters}
+                />
+              </StatsCell>
+            </StatsRow>
+          </Group>
+
+          <Group moduleId={driveData.id} title="Gradeability">
+            <StatsRow>
+              <StatsCell>
+                Max gradient{' '}
+                <InfoTooltip
+                  content="The steepest slope the vehicle can physically climb, limited by traction or available power"
+                  iconProps={{
+                    color: 'fg.muted',
+                  }}
+                />
+              </StatsCell>
+              <StatsCell>
+                <Gradient
+                  degrees={grades.ceiling.degrees}
+                  percent={grades.ceiling.percent}
+                />
+              </StatsCell>
+            </StatsRow>
+            {gradeSpeeds.map(([percent, kmh]) => (
+              <StatsRow key={percent}>
+                <StatsCell>
+                  <Gradient
+                    degrees={degreesOfGrade(percent)}
+                    percent={percent}
+                  />
+                </StatsCell>
+                <StatsCell>
+                  <FormatNumber
+                    maximumFractionDigits={1}
+                    style="unit"
+                    unit="kilometer-per-hour"
+                    value={kmh}
+                  />
+                </StatsCell>
+              </StatsRow>
+            ))}
+          </Group>
+
+          {pivot && (
+            <Group moduleId={driveData.id} title="Manoeuvrability">
+              <StatsRow>
+                <StatsCell>Pivot rate</StatsCell>
+                <StatsCell>
+                  <FormatNumber
+                    maximumFractionDigits={1}
+                    style="unit"
+                    unit="degree-per-second"
+                    value={pivot.degPerSec}
+                  />
+                </StatsCell>
+              </StatsRow>
+              {pivot.timeTo180 !== undefined && (
+                <StatsRow>
+                  <StatsCell>Pivot 180°</StatsCell>
+                  <StatsCell>
+                    <Seconds value={pivot.timeTo180} />
+                  </StatsCell>
+                </StatsRow>
+              )}
+              {pivot.timeTo360 !== undefined && (
+                <StatsRow>
+                  <StatsCell>Pivot 360°</StatsCell>
+                  <StatsCell>
+                    <Seconds value={pivot.timeTo360} />
+                  </StatsCell>
+                </StatsRow>
+              )}
+            </Group>
+          )}
+        </Stack>
+      </TitledCard>
+    </>
+  );
+}
