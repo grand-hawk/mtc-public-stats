@@ -1,5 +1,3 @@
 # Namer Tsrikhon
 
 ## Description
-
-## Armour

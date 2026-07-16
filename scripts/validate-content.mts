@@ -131,17 +131,11 @@ function parseFile(content: string): ParsedFile {
 
 interface ConfigSection {
   name: string;
-  lineRule?: string;
 }
 const config = parse(await readFile(CONFIG_PATH, 'utf-8')) as {
   vehicles: { sections: ConfigSection[] };
 };
 const allowedNames = config.vehicles.sections.map((s) => s.name);
-const rulesByName = Object.fromEntries(
-  config.vehicles.sections
-    .filter((s) => s.lineRule)
-    .map((s) => [s.name, new RegExp(s.lineRule!)]),
-);
 
 async function readMdDir(dir: string): Promise<string[]> {
   try {
@@ -306,36 +300,6 @@ for (const filepath of vehicleFiles) {
     }
 
     const trimmed = line.trim();
-    const rule = rulesByName[currentSection];
-    if (rule && !rule.test(trimmed)) {
-      errors.push(
-        `Line ${lineNum(i + 1)}: content in "${currentSection}" doesn't match required format — got "${trimmed}"`,
-      );
-    }
-
-    if (rule && rule.test(trimmed)) {
-      const rangeMatch = trimmed.match(/:\s*(~?\d+)-(~?\d+)$/);
-      if (rangeMatch) {
-        const left = parseInt(rangeMatch[1].replace('~', ''), 10);
-        const right = parseInt(rangeMatch[2].replace('~', ''), 10);
-        if (left >= right) {
-          errors.push(
-            `Line ${lineNum(i + 1)}: armour range must have left < right, got ${rangeMatch[1]}-${rangeMatch[2]}`,
-          );
-        }
-      } else if (currentSection === 'Armour') {
-        const singleMatch = trimmed.match(/:\s*(~?\d+)$/);
-        if (
-          singleMatch &&
-          parseInt(singleMatch[1].replace('~', ''), 10) === 0
-        ) {
-          errors.push(
-            `Line ${lineNum(i + 1)}: armour cannot be standalone 0 (use 0-5 for a range if needed)`,
-          );
-        }
-      }
-    }
-
     if (!sectionContent.has(currentSection)) {
       sectionContent.set(currentSection, []);
     }
@@ -354,8 +318,6 @@ for (const filepath of vehicleFiles) {
     );
   }
   if (!descriptionText.trim()) warnings.push('Description section is empty');
-  const armourContent = sectionContent.get('Armour')?.join(' ') ?? '';
-  if (!armourContent.trim()) warnings.push('Armour section is empty');
 
   errors.push(...validateWikilinks(body, bodyLineOffset));
   report(filepath, errors, warnings);

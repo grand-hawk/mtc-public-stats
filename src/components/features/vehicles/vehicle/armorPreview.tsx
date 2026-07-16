@@ -19,7 +19,7 @@ function isNetworkGood(): boolean {
 export default function VehicleArmorPreview({
   frontArmorDepth,
 }: {
-  frontArmorDepth: number | null | undefined;
+  frontArmorDepth: number;
 }) {
   const vehicle = useVehicle();
   const place = useRouterQuery('place')!;
@@ -51,7 +51,7 @@ export default function VehicleArmorPreview({
     overrideData: null,
     palette: palettes[2],
     ricochetAngle: 85,
-    slug: loaded && frontArmorDepth != null ? vehicle.info.slug : null,
+    slug: loaded ? vehicle.info.slug : null,
   });
 
   React.useEffect(() => {
@@ -84,12 +84,10 @@ export default function VehicleArmorPreview({
   }, [modules]);
 
   React.useEffect(() => {
-    if (detectedMaxDepth > 0 && frontArmorDepth != null) {
+    if (detectedMaxDepth > 0) {
       setMaxDepth(detectedMaxDepth * (frontArmorDepth / 100));
     }
   }, [detectedMaxDepth, frontArmorDepth]);
-
-  if (frontArmorDepth == null) return null;
 
   return (
     <Stack ref={containerRef} gap={3}>

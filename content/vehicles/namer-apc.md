@@ -1,5 +1,3 @@
 # Namer APC
 
 ## Description
-
-## Armour

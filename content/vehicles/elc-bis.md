@@ -1,5 +1,3 @@
 # ELC bis
 
 ## Description
-
-## Armour

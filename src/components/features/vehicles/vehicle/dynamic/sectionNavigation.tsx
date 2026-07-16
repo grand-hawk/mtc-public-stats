@@ -43,7 +43,10 @@ function computeMarkers(
   }
 
   // Armour section
-  if (vehicle.content?.Armour) markers.push({ name: 'Armour', slug: 'armour' });
+  if (vehicle.info.damageModules) {
+    // damageModules is only present when armor is also present
+    markers.push({ name: 'Armour', slug: 'armour' });
+  }
 
   // Defenses section
   const essModule = getOneModuleOfType('ESS', assembledModules);

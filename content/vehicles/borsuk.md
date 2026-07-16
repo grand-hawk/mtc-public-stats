@@ -1,5 +1,3 @@
 # Borsuk
 
 ## Description
-
-## Armour
