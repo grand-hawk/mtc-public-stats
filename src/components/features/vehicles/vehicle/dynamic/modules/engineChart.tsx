@@ -14,6 +14,9 @@ import type { VehiclesPlaceDataVehicleDriveDataMetrics } from '@generated/vehicl
 
 const POWER_LABEL = 'Power';
 const TORQUE_LABEL = 'Torque';
+const OUTPUT_TORQUE_LABEL = 'Output torque';
+
+const NM_LABELS = new Set([TORQUE_LABEL, OUTPUT_TORQUE_LABEL]);
 
 export default function EngineChart({
   idleRPM,
@@ -22,6 +25,10 @@ export default function EngineChart({
   idleRPM: number;
   points: VehiclesPlaceDataVehicleDriveDataMetrics['engine']['points'];
 }) {
+  const hasOutputTorque = points.some(
+    (point) => point.outputTorqueNm !== undefined,
+  );
+
   const chart = useChart({
     data: points.filter((point) => point.rpm >= idleRPM),
     series: [
@@ -37,6 +44,16 @@ export default function EngineChart({
         name: 'torqueNm',
         yAxisId: 'torque',
       },
+      ...(hasOutputTorque
+        ? [
+            {
+              color: 'purple.solid',
+              label: OUTPUT_TORQUE_LABEL,
+              name: 'outputTorqueNm' as const,
+              yAxisId: 'torque',
+            },
+          ]
+        : []),
     ],
   });
 
@@ -100,7 +117,7 @@ export default function EngineChart({
           content={
             <Chart.Tooltip
               formatter={(value: number, name: string) =>
-                name === TORQUE_LABEL
+                NM_LABELS.has(name)
                   ? [` ${value} Nm`, name]
                   : [` ${value} hp`, name]
               }
