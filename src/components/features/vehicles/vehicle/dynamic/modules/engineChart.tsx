@@ -5,6 +5,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   Tooltip,
   XAxis,
   YAxis,
@@ -30,7 +31,9 @@ export default function EngineChart({
   );
 
   const chart = useChart({
-    data: points.filter((point) => point.rpm >= idleRPM),
+    data: hasOutputTorque
+      ? points
+      : points.filter((point) => point.rpm >= idleRPM),
     series: [
       {
         color: 'blue.solid',
@@ -65,6 +68,21 @@ export default function EngineChart({
         responsive
       >
         <CartesianGrid stroke={chart.color('border')} vertical={false} />
+
+        {hasOutputTorque && (
+          <ReferenceLine
+            stroke={chart.color('fg.muted')}
+            strokeDasharray="3 3"
+            x={idleRPM}
+            yAxisId="power"
+            label={{
+              fill: chart.color('fg.muted'),
+              fontSize: 12,
+              position: 'insideTopRight',
+              value: 'Idle',
+            }}
+          />
+        )}
 
         <XAxis
           axisLine={false}
