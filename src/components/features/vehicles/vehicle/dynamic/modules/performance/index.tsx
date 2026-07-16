@@ -175,7 +175,7 @@ export default function Performance() {
               </StatsCell>
             </StatsRow>
             <StatsRow>
-              <StatsCell>Vmax - 0</StatsCell>
+              <StatsCell>Vmax–0</StatsCell>
               <StatsCell>
                 <FormatNumber
                   maximumFractionDigits={1}
