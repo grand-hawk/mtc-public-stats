@@ -175,7 +175,7 @@ export default function Performance() {
               </StatsCell>
             </StatsRow>
             <StatsRow>
-              <StatsCell>Stopping distance from Vmax</StatsCell>
+              <StatsCell>Vmax - 0</StatsCell>
               <StatsCell>
                 <FormatNumber
                   maximumFractionDigits={1}
