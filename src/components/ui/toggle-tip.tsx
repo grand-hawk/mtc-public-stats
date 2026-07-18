@@ -103,6 +103,7 @@ export const ToggleTip = React.forwardRef<HTMLDivElement, ToggleTipProps>(
               borderRadius="l2"
               boxShadow="md"
               color="fg.inverted"
+              data-md-ignore
               fontWeight="medium"
               maxW="xs"
               px="2.5"
