@@ -18,9 +18,23 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/',
+        destination: '/mtc',
+        statusCode: 301,
+      },
+      {
         source: '/:place/loadouts',
         destination: '/:place',
         permanent: false,
+      },
+    ];
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: '/.well-known/traffic-advice',
+        destination: '/api/traffic-advice',
       },
     ];
   },
