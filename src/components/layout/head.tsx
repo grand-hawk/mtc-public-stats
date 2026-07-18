@@ -25,6 +25,7 @@ export default function InternalHead() {
   const router = useRouter();
   const basePath = router.asPath.split('?')[0];
   const hasQueryParams = router.asPath.includes('?');
+  const shouldNoIndex = hasQueryParams || initials.toLowerCase() === 'rv';
   const canonicalUrl = `${getBaseUrl()}${basePath}`;
 
   return (
@@ -34,7 +35,7 @@ export default function InternalHead() {
 
       <meta content="website" property="og:type" />
       <meta
-        content={hasQueryParams ? 'noindex,follow' : 'index,follow'}
+        content={shouldNoIndex ? 'noindex,follow' : 'index,follow'}
         name="robots"
       />
       <meta content={formatTitle(null, initials)} property="og:site_name" />
