@@ -2,8 +2,8 @@ import { Box, Icon, IconButton, Input, Spinner, Text } from '@chakra-ui/react';
 import React from 'react';
 import { LuSlidersHorizontal, LuX } from 'react-icons/lu';
 
+import VehicleGrid from '@/components/features/vehicles/browse/grid';
 import { SPEED_BANDS } from '@/components/features/vehicles/browse/speedBands';
-import VirtualGrid from '@/components/features/vehicles/browse/virtualGrid';
 import { SEARCH_INPUT_HEIGHT } from '@/components/layout/searchLayout/searchSidebar/input';
 import {
   DrawerBackdrop,
@@ -490,7 +490,7 @@ export default function VehiclesSearch({
             </Text>
           </Box>
         ) : (
-          <VirtualGrid placeInitials={place.initials} vehicles={filtered} />
+          <VehicleGrid placeInitials={place.initials} vehicles={filtered} />
         )}
       </Box>
     </Box>

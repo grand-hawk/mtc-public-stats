@@ -9,10 +9,11 @@ import TeamIcon from '@/components/icons/teams';
 import type { PremiumType } from '@/components/features/vehicles/premiumIcon';
 
 const CARD_IMAGE_HEIGHT = 110;
+const CARD_IMAGE_WIDTH = 400;
+const CARD_HEIGHT = 163;
 
 interface VehicleCardProps {
   href: string;
-  imageWidth: number;
   isNew?: boolean;
   name: string;
   premium?: PremiumType;
@@ -23,7 +24,6 @@ interface VehicleCardProps {
 
 export default React.memo(function VehicleCard({
   href,
-  imageWidth,
   isNew,
   name,
   premium,
@@ -39,6 +39,10 @@ export default React.memo(function VehicleCard({
       borderWidth="1px"
       borderColor="whiteAlpha.100"
       transition="border-color 0.2s"
+      css={{
+        containIntrinsicSize: `auto ${CARD_HEIGHT}px`,
+        contentVisibility: 'auto',
+      }}
       _hover={{
         borderColor: 'blue.500',
         textDecoration: 'none',
@@ -54,9 +58,10 @@ export default React.memo(function VehicleCard({
           <VehicleImage
             height={CARD_IMAGE_HEIGHT}
             name={name}
+            sizes={`(max-width: 767px) 100vw, ${CARD_IMAGE_WIDTH}px`}
             slug={slug}
             type="perspective"
-            width={imageWidth}
+            width={CARD_IMAGE_WIDTH}
           />
           {isNew && (
             <Badge
