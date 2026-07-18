@@ -1,0 +1,24 @@
+diff --git a/dist/esm/shared/lib/router/router.js b/dist/esm/shared/lib/router/router.js
+index 906aeaf1c2bff90d8830ffda60753fcfa6df1768..e96ebdf66b9a88046571fb878683649fa4656fc5 100644
+--- a/dist/esm/shared/lib/router/router.js
++++ b/dist/esm/shared/lib/router/router.js
+@@ -45,6 +45,7 @@ function buildCancellationError() {
+     });
+ }
+ export async function matchesMiddleware(options) {
++    return false;
+     const matchers = await Promise.resolve(options.router.pageLoader.getMiddleware());
+     if (!matchers) return false;
+     const { pathname: asPathname } = parsePath(options.asPath);
+diff --git a/dist/shared/lib/router/router.js b/dist/shared/lib/router/router.js
+index 7c03d84c315b3355b78ed372b874995e07acf7c6..80ed66412e0a029d08b8bd025092f94f68c43560 100644
+--- a/dist/shared/lib/router/router.js
++++ b/dist/shared/lib/router/router.js
+@@ -73,6 +73,7 @@ function buildCancellationError() {
+     });
+ }
+ async function matchesMiddleware(options) {
++    return false;
+     const matchers = await Promise.resolve(options.router.pageLoader.getMiddleware());
+     if (!matchers) return false;
+     const { pathname: asPathname } = (0, _parsepath.parsePath)(options.asPath);
