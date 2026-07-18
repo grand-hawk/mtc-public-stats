@@ -51,17 +51,16 @@ export default React.memo(function VehicleCard({
       <NextLink href={href} prefetch={false}>
         <Box
           position="relative"
-          height="110px"
+          height={`${CARD_IMAGE_HEIGHT}px`}
           overflow="hidden"
           backgroundColor="blackAlpha.500"
         >
           <VehicleImage
-            height={CARD_IMAGE_HEIGHT}
+            fill
             name={name}
             sizes={`(max-width: 767px) 100vw, ${CARD_IMAGE_WIDTH}px`}
             slug={slug}
             type="perspective"
-            width={CARD_IMAGE_WIDTH}
           />
           {isNew && (
             <Badge
