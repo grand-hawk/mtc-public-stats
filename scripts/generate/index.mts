@@ -66,7 +66,7 @@ await Promise.all(
     let outputContent = header;
     outputContent += `import { existsSync } from 'node:fs';\n`;
     outputContent += `import { mkdir, readFile, writeFile } from 'node:fs/promises';\n`;
-    outputContent += `import { Agent } from 'undici';\n`;
+    outputContent += `import { Agent, fetch } from 'undici';\n`;
     outputContent += '\n';
     outputContent += `import { sse } from './sse';\n`;
     outputContent += '\n';
@@ -96,7 +96,7 @@ await Promise.all(
     outputContent += `  \n`;
     outputContent += `  const agent = new Agent({ pipelining: 0 });\n`;
     outputContent += `  try {\n`;
-    outputContent += `    const response = await fetch('${prefixUrl}/${dataFile}', { headers, dispatcher: agent } as RequestInit);\n`;
+    outputContent += `    const response = await fetch('${prefixUrl}/${dataFile}', { headers, dispatcher: agent });\n`;
     outputContent += `    \n`;
     outputContent += `    if (response.status === 304 && cached) {\n`;
     outputContent += `      console.log('Using cached ${dataFile}', cached.etag);\n`;
