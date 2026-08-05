@@ -136,7 +136,7 @@ export function buildVehicleSections(): SectionDef<AssembledVehicle>[] {
           if (!drive) return '—';
           return (
             <>
-              <FormatNumber value={drive.data.engine.horsepower} /> hp
+              <FormatNumber value={drive.data.engine.horsepower} /> PS
             </>
           );
         }),
@@ -158,7 +158,7 @@ export function buildVehicleSections(): SectionDef<AssembledVehicle>[] {
                 maximumFractionDigits={1}
                 value={drive.data.engine.horsepower / drive.data.mass}
               />{' '}
-              hp/t
+              PS/t
             </>
           );
         }),

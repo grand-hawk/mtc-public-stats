@@ -50,7 +50,14 @@ function GearRows({
     <StatsRow key={gear.gear} withPaddingLeft>
       <StatsCell>{gearLabel(gear.gear, stepless)}</StatsCell>
       <StatsCell>
-        {gear.ratio === undefined ? '—' : `${gear.ratio}:1`}
+        {gear.ratio === undefined ? (
+          '—'
+        ) : (
+          <>
+            <FormatNumber maximumFractionDigits={3} value={gear.ratio} />
+            :1
+          </>
+        )}
       </StatsCell>
       <StatsCell>
         <FormatNumber

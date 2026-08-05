@@ -110,7 +110,7 @@ export default function EngineChart({
             fill: chart.color('fg.muted'),
             position: 'insideLeft',
             style: { textAnchor: 'middle' },
-            value: 'Power (hp)',
+            value: 'Power (PS)',
           }}
         />
         <YAxis
