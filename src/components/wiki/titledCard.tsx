@@ -72,6 +72,20 @@ export default function TitledCard({
   const titleSlug =
     typeof withAnchor === 'string' ? slug(withAnchor) : slug(title);
 
+  React.useLayoutEffect(() => {
+    if (!withAnchor || !collapsible) return;
+
+    const expandIfHashMatches = () => {
+      if (window.location.hash.slice(1) === titleSlug) {
+        setIsExpanded(true);
+      }
+    };
+
+    expandIfHashMatches();
+    window.addEventListener('hashchange', expandIfHashMatches);
+    return () => window.removeEventListener('hashchange', expandIfHashMatches);
+  }, [withAnchor, collapsible, titleSlug]);
+
   const header = (
     <Box
       alignItems="center"
@@ -89,7 +103,13 @@ export default function TitledCard({
       >
         {withAnchor ? (
           <Link asChild>
-            <NextLink href={`#${titleSlug}`} shallow>
+            <NextLink
+              href={`#${titleSlug}`}
+              shallow
+              onClick={() => {
+                if (collapsible) setIsExpanded(true);
+              }}
+            >
               {title}
             </NextLink>
           </Link>
