@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 
 import { CenterSpinner } from '@/components/common/spinners';
 import DevelopmentOverlay from '@/components/development/overlay';
+import SvgSymbols from '@/components/icons/symbols';
 import InternalHead from '@/components/layout/head';
 import { ChakraProvider } from '@/components/providers/chakra';
 import Umami from '@/components/providers/umami';
@@ -37,6 +38,8 @@ export function App({ Component, pageProps }: AppProps) {
 
         {debugEnabled && <DevelopmentOverlay />}
       </ChakraProvider>
+
+      <SvgSymbols />
 
       <Umami />
     </>
