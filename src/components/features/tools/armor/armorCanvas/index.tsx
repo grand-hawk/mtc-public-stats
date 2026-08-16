@@ -667,7 +667,12 @@ export default function ArmorCanvas({
                     display: 'block',
                   }}
                 />
-                <Text color="fg.muted" fontSize="2xs" whiteSpace="nowrap">
+                <Text
+                  color="fg.muted"
+                  fontFamily="mono"
+                  fontSize="2xs"
+                  whiteSpace="nowrap"
+                >
                   Ricochet (≥{ricochetAngle}°)
                 </Text>
               </Flex>

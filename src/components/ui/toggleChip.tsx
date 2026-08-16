@@ -42,7 +42,9 @@ export default function ToggleChip({
       color={active ? a.activeColor : 'fg/80'}
       cursor="pointer"
       display="flex"
+      fontFamily="mono"
       fontSize="xs"
+      fontVariantNumeric="tabular-nums"
       gap={1}
       justifyContent="center"
       paddingX={1.5}

@@ -6,7 +6,7 @@ import React from 'react';
 export default function Document() {
   return (
     <Html
-      className={`${GeistMono.className} ${GeistSans.variable}`}
+      className={`${GeistSans.className} ${GeistMono.variable} ${GeistSans.variable}`}
       data-scroll-behavior="smooth"
       lang="en"
     >

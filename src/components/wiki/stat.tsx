@@ -19,7 +19,12 @@ export default function Stat({
   return (
     <ChakraStat.Root flexShrink={0} whiteSpace="nowrap" {...rootProps}>
       <ChakraStat.Label {...labelProps}>{label}</ChakraStat.Label>
-      <ChakraStat.ValueText fontSize="xl" {...valueProps}>
+      <ChakraStat.ValueText
+        fontFamily="mono"
+        fontSize="xl"
+        fontVariantNumeric="tabular-nums"
+        {...valueProps}
+      >
         {children}
       </ChakraStat.ValueText>
     </ChakraStat.Root>

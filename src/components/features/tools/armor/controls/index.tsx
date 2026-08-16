@@ -539,7 +539,13 @@ export default function ArmorControls({
                   <Text color="fg.muted" fontSize="xs">
                     Ricochet angle
                   </Text>
-                  <Text color="fg" fontSize="xs" marginLeft="auto">
+                  <Text
+                    color="fg"
+                    fontFamily="mono"
+                    fontSize="xs"
+                    fontVariantNumeric="tabular-nums"
+                    marginLeft="auto"
+                  >
                     {ricochetAngle.toFixed(1)}°
                   </Text>
                 </Flex>
@@ -644,7 +650,11 @@ export default function ArmorControls({
                     width="100%"
                     onValueChange={(d) => onMinChange(Number(d.value))}
                   >
-                    <NumberInput.Input borderRadius="0" />
+                    <NumberInput.Input
+                      borderRadius="0"
+                      fontFamily="mono"
+                      fontVariantNumeric="tabular-nums"
+                    />
                   </NumberInput.Root>
                   <Text color="fg.muted" fontSize="sm" flexShrink={0}>
                     —
@@ -658,7 +668,11 @@ export default function ArmorControls({
                     width="100%"
                     onValueChange={(d) => onMaxChange(Number(d.value))}
                   >
-                    <NumberInput.Input borderRadius="0" />
+                    <NumberInput.Input
+                      borderRadius="0"
+                      fontFamily="mono"
+                      fontVariantNumeric="tabular-nums"
+                    />
                   </NumberInput.Root>
                 </Flex>
               </div>

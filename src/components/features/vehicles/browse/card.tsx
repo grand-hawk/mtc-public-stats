@@ -94,13 +94,7 @@ export default React.memo(function VehicleCard({
               <TeamIcon team={team} />
             </HStack>
           </HStack>
-          <Text
-            color="fg.subtle"
-            fontSize="xs"
-            letterSpacing="0.05em"
-            lineClamp={1}
-            textTransform="uppercase"
-          >
+          <Text color="fg.subtle" fontSize="xs" lineClamp={1}>
             {role}
           </Text>
         </Box>

@@ -1,5 +1,6 @@
 import { createSystem, defaultConfig, defineConfig } from '@chakra-ui/react';
 import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
 
 import { recipes, slotRecipes } from '@/components/providers/chakra/recipes';
 
@@ -24,12 +25,11 @@ const config = defineConfig({
   theme: {
     tokens: {
       fonts: {
-        // GeistMono.style.fontFamily has fallback
         heading: {
-          value: GeistMono.style.fontFamily,
+          value: GeistSans.style.fontFamily,
         },
         body: {
-          value: GeistMono.style.fontFamily,
+          value: GeistSans.style.fontFamily,
         },
         mono: {
           value: GeistMono.style.fontFamily,

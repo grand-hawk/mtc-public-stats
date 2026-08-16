@@ -170,7 +170,9 @@ export default function ComparisonGrid<T>({
                         borderLeftWidth="1px"
                         borderStyle="dashed"
                         display="flex"
+                        fontFamily="mono"
                         fontSize="sm"
+                        fontVariantNumeric="tabular-nums"
                         justifyContent="center"
                         paddingX={3}
                         paddingY={2}

@@ -101,6 +101,10 @@ export default function KdrTable({ range }: { range: keyof KdrPlaceData }) {
         '& .chakra-table__row': {
           height: '40px',
         },
+        '& .chakra-table__cell:not(:nth-of-type(1))': {
+          fontFamily: 'mono',
+          fontVariantNumeric: 'tabular-nums',
+        },
       }}
       showColumnBorder
       variant="outline"

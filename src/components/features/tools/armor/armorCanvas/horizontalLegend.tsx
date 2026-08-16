@@ -58,7 +58,13 @@ export default function HorizontalLegend({
 
   return (
     <Flex alignItems="center" flex={1} gap={1} minWidth={0} position="relative">
-      <Text color="fg.muted" flexShrink={0} fontSize="2xs">
+      <Text
+        color="fg.muted"
+        flexShrink={0}
+        fontFamily="mono"
+        fontSize="2xs"
+        fontVariantNumeric="tabular-nums"
+      >
         {minMm} mm
       </Text>
 
@@ -79,7 +85,9 @@ export default function HorizontalLegend({
             background="bg.panel"
             borderColor="border.muted"
             borderWidth="1px"
+            fontFamily="mono"
             fontSize="2xs"
+            fontVariantNumeric="tabular-nums"
             left={`${hoverInfo.x}px`}
             paddingX={1}
             pointerEvents="none"
@@ -94,7 +102,13 @@ export default function HorizontalLegend({
         )}
       </Box>
 
-      <Text color="fg.muted" flexShrink={0} fontSize="2xs">
+      <Text
+        color="fg.muted"
+        flexShrink={0}
+        fontFamily="mono"
+        fontSize="2xs"
+        fontVariantNumeric="tabular-nums"
+      >
         {maxMm} mm
       </Text>
     </Flex>
