@@ -72,7 +72,6 @@ export default function SidebarItem({
             color: 'var(--item-color)',
           },
           '& .sidebar-item-text': {
-            fontWeight: 'medium',
             color: 'fg',
           },
         }}
