@@ -26,7 +26,10 @@ export function proxy(req: NextRequest) {
   }
 
   if (redirect !== pathname) {
-    return NextResponse.redirect(new URL(redirect, req.url), 302);
+    return NextResponse.redirect(new URL(redirect, req.url), {
+      status: 301,
+      headers: { 'cache-control': 'public, max-age=86400' },
+    });
   }
 
   const initials = pathname.split('/')[1];
