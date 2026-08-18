@@ -13,9 +13,9 @@ await mkdir('generated');
 
 const environment = process.env.DATA_ENV || process.env.NODE_ENV;
 const version = process.argv[2];
-const prefixUrl = `https://public-stats-data.multicrew.dev/${environment}/${version}`;
+const prefix = `https://public-stats-data.multicrew.dev/${environment}/${version}`;
 const dataApi = ky.create({
-  prefixUrl,
+  prefix,
   timeout: 30000,
   retry: {
     limit: 4,
@@ -96,7 +96,7 @@ await Promise.all(
     outputContent += `  \n`;
     outputContent += `  const agent = new Agent({ pipelining: 0 });\n`;
     outputContent += `  try {\n`;
-    outputContent += `    const response = await fetch('${prefixUrl}/${dataFile}', { headers, dispatcher: agent });\n`;
+    outputContent += `    const response = await fetch('${prefix}/${dataFile}', { headers, dispatcher: agent });\n`;
     outputContent += `    \n`;
     outputContent += `    if (response.status === 304 && cached) {\n`;
     outputContent += `      console.log('Using cached ${dataFile}', cached.etag);\n`;
