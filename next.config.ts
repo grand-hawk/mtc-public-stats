@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
 
   output: process.env.NEXT_OUTPUT as NextConfig['output'],
 
+  outputFileTracingIncludes: {
+    '*': ['./node_modules/.pnpm/@swc+helpers@*/node_modules/@swc/helpers/esm/**'],
+  },
+
   devIndicators: false,
   poweredByHeader: false,
 
