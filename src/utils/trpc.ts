@@ -30,11 +30,21 @@ export const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
+export const getInternalUrl = () => {
+  if (typeof window !== 'undefined') return '';
+
+  if (process.env.RAILWAY_PRIVATE_DOMAIN) {
+    return `http://${process.env.RAILWAY_PRIVATE_DOMAIN}:${process.env.PORT ?? 3000}`;
+  }
+
+  return getBaseUrl();
+};
+
 export const trpc = createTRPCNext<AppRouter>({
   ssr: true,
   ssrPrepass,
   config() {
-    const url = `${getBaseUrl()}/api/trpc`;
+    const url = `${getInternalUrl()}/api/trpc`;
     const transformer = superjson;
 
     return {

@@ -4,7 +4,7 @@ import Cache from 'stale-lru-cache';
 import { IS_DEV } from '@/env';
 import { processHtmlToMarkdown } from '@/server/utils/processHtmlTomarkdown';
 import { getExtension } from '@/utils/extensions';
-import { getBaseUrl } from '@/utils/trpc';
+import { getBaseUrl, getInternalUrl } from '@/utils/trpc';
 
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
@@ -32,14 +32,9 @@ export function createMarkdownRoute() {
 
     if (getExtension(path) !== '.md') return { notFound: true };
 
-    const htmlUrl = new URL(
-      path.replace(/^\/md\//, '').replace(/\.md$/, ''),
-      getBaseUrl(),
-    );
-    htmlUrl.hash = '';
-    htmlUrl.search = '';
-
-    const htmlUrlString = htmlUrl.toString();
+    const htmlPath = path.replace(/^\/md\//, '').replace(/\.md$/, '');
+    const htmlUrlString = new URL(htmlPath, getInternalUrl()).toString();
+    const canonicalUrl = new URL(htmlPath, getBaseUrl()).toString();
 
     const headSuccess = await ky
       .head(htmlUrlString)
@@ -55,7 +50,7 @@ export function createMarkdownRoute() {
 
     if (markdown === null) return { notFound: true };
 
-    res.setHeader('Link', `<${htmlUrlString}>; rel="canonical"`);
+    res.setHeader('Link', `<${canonicalUrl}>; rel="canonical"`);
     res.setHeader('X-Robots-Tag', 'noindex');
     res.setHeader('content-type', 'text/markdown; charset=utf-8');
     res.setHeader(
