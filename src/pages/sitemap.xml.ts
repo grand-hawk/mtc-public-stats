@@ -20,19 +20,22 @@ interface SitemapEntry {
   path: string;
   changefreq: string;
   priority: string;
+  lastmod: string;
 }
 
-function tabPriority(key: (typeof indexableTabKeys)[number]): SitemapEntry {
+type TabPriority = Pick<SitemapEntry, 'changefreq' | 'priority'>;
+
+function tabPriority(key: (typeof indexableTabKeys)[number]): TabPriority {
   if ((primaryTabKeys as readonly string[]).includes(key)) {
-    return { path: '', changefreq: 'weekly', priority: '0.9' };
+    return { changefreq: 'weekly', priority: '0.9' };
   }
   if ((secondaryTabKeys as readonly string[]).includes(key)) {
-    return { path: '', changefreq: 'weekly', priority: '0.8' };
+    return { changefreq: 'weekly', priority: '0.8' };
   }
   if ((toolsTabKeys as readonly string[]).includes(key)) {
-    return { path: '', changefreq: 'monthly', priority: '0.5' };
+    return { changefreq: 'monthly', priority: '0.5' };
   }
-  return { path: '', changefreq: 'monthly', priority: '0.5' };
+  return { changefreq: 'monthly', priority: '0.5' };
 }
 
 function getPaths(): SitemapEntry[] {
@@ -57,10 +60,18 @@ function getPaths(): SitemapEntry[] {
   const loadoutsPlace = loadouts.data[placeId];
   const shellsPlace = shells.data[placeId];
 
+  const vehiclesDate = vehicles.metadata.date;
+  const loadoutsDate = loadouts.metadata.date;
+  const shellsDate = shells.metadata.date;
+  const latestDate = [vehiclesDate, loadoutsDate, shellsDate].reduce((a, b) =>
+    a > b ? a : b,
+  );
+
   paths.push({
     path: `${initials}`,
     changefreq: 'weekly',
     priority: '1',
+    lastmod: latestDate,
   });
 
   for (const key of indexableTabKeys) {
@@ -70,6 +81,7 @@ function getPaths(): SitemapEntry[] {
       path: `${initials}${tab.path}`,
       changefreq,
       priority,
+      lastmod: latestDate,
     });
   }
 
@@ -78,6 +90,7 @@ function getPaths(): SitemapEntry[] {
       path: `${initials}/vehicles/${vehicleSlug}`,
       changefreq: 'monthly',
       priority: '0.6',
+      lastmod: vehiclesDate,
     });
   }
 
@@ -86,6 +99,7 @@ function getPaths(): SitemapEntry[] {
       path: `${initials}/teams/${slug(team)}`,
       changefreq: 'monthly',
       priority: '0.6',
+      lastmod: loadoutsDate,
     });
   }
 
@@ -94,6 +108,7 @@ function getPaths(): SitemapEntry[] {
       path: `${initials}/loadouts/${slug(loadout)}`,
       changefreq: 'monthly',
       priority: '0.6',
+      lastmod: loadoutsDate,
     });
   }
 
@@ -102,6 +117,7 @@ function getPaths(): SitemapEntry[] {
       path: `${initials}/shells/${shellSlug}`,
       changefreq: 'monthly',
       priority: '0.5',
+      lastmod: shellsDate,
     });
   }
 
@@ -122,9 +138,10 @@ export function getServerSideProps({
   const baseUrl = getBaseUrl();
   const paths = getPaths();
 
-  for (const { changefreq, path, priority } of paths) {
+  for (const { changefreq, lastmod, path, priority } of paths) {
     const url = doc.ele('url');
     url.ele('loc').txt(new URL(path, baseUrl).toString()).up();
+    url.ele('lastmod').txt(lastmod).up();
     url.ele('changefreq').txt(changefreq).up();
     url.ele('priority').txt(priority).up();
     url.up();
