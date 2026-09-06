@@ -10,11 +10,15 @@ import {
 } from '@/components/layout/navigation/tabs';
 import { getBaseUrl } from '@/utils/trpc';
 import { getConfig } from '@generated/config';
+import { getKdr } from '@generated/kdr';
 import { getLoadouts } from '@generated/loadouts';
 import { getShells } from '@generated/shells';
 import { getVehicles } from '@generated/vehicles';
 
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+
+const VEHICLE_PRIORITY_TIERS = ['0.8', '0.7', '0.6', '0.5'];
+const RECENTLY_ADDED_MONTHS = 3;
 
 interface SitemapEntry {
   path: string;
@@ -24,6 +28,13 @@ interface SitemapEntry {
 }
 
 type TabPriority = Pick<SitemapEntry, 'changefreq' | 'priority'>;
+
+function vehiclePriority(rank: number, total: number) {
+  const tier = Math.floor((rank / total) * VEHICLE_PRIORITY_TIERS.length);
+  return VEHICLE_PRIORITY_TIERS[
+    Math.min(tier, VEHICLE_PRIORITY_TIERS.length - 1)
+  ];
+}
 
 function tabPriority(key: (typeof indexableTabKeys)[number]): TabPriority {
   if ((primaryTabKeys as readonly string[]).includes(key)) {
@@ -51,12 +62,30 @@ function getPaths(): SitemapEntry[] {
   const placeId = config.data.placeIds[placeName];
 
   const vehiclesPlace = vehicles.data[placeId];
-  const vehicleSlugs = Object.entries(vehiclesPlace.metadata.slugs)
+  const allTimeKdr = getKdr().data[placeId].data.all_time;
+
+  const recentlyAddedAfter = new Date();
+  recentlyAddedAfter.setMonth(
+    recentlyAddedAfter.getMonth() - RECENTLY_ADDED_MONTHS,
+  );
+
+  const engagement = (vehicleName: string) => {
+    const entry = allTimeKdr[vehicleName];
+    return entry ? entry.kills + entry.deaths : 0;
+  };
+
+  const isRecentlyAdded = (vehicleName: string) => {
+    const { addedDate } = vehiclesPlace.data[vehicleName].info;
+    return addedDate ? new Date(addedDate) >= recentlyAddedAfter : false;
+  };
+
+  const rankedVehicles = Object.entries(vehiclesPlace.metadata.slugs)
     .filter(([, vehicleName]) => {
       const vehicle = vehiclesPlace.data[vehicleName];
       return vehicle && !vehicle.info.unlisted;
     })
-    .map(([vehicleSlug]) => vehicleSlug);
+    .sort(([, a], [, b]) => engagement(b) - engagement(a));
+
   const loadoutsPlace = loadouts.data[placeId];
   const shellsPlace = shells.data[placeId];
 
@@ -85,14 +114,16 @@ function getPaths(): SitemapEntry[] {
     });
   }
 
-  for (const vehicleSlug of vehicleSlugs) {
+  rankedVehicles.forEach(([vehicleSlug, vehicleName], rank) => {
     paths.push({
       path: `${initials}/vehicles/${vehicleSlug}`,
       changefreq: 'monthly',
-      priority: '0.6',
+      priority: isRecentlyAdded(vehicleName)
+        ? VEHICLE_PRIORITY_TIERS[0]
+        : vehiclePriority(rank, rankedVehicles.length),
       lastmod: vehiclesDate,
     });
-  }
+  });
 
   for (const team of loadoutsPlace.metadata.teams) {
     paths.push({
