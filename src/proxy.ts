@@ -10,16 +10,23 @@ export const config = {
   matcher: '/((?!_next/|api/|md/|404|.*\\.).*)',
 };
 
+const slugifiedCollections = new Set([
+  'vehicles',
+  'teams',
+  'loadouts',
+  'shells',
+]);
+
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   let redirect = pathname.startsWith('/vehicles') ? `/mtc${pathname}` : pathname;
 
   const parts = redirect.split('/').filter(Boolean);
-  if (parts.length >= 3 && parts[parts.length - 2] === 'vehicles') {
-    const vehicle = decodeURIComponent(parts[parts.length - 1]);
-    const slugified = slug(vehicle);
-    if (vehicle.toLowerCase() !== slugified.toLowerCase()) {
+  if (parts.length >= 3 && slugifiedCollections.has(parts[parts.length - 2])) {
+    const entry = decodeURIComponent(parts[parts.length - 1]);
+    const slugified = slug(entry);
+    if (entry !== slugified) {
       parts[parts.length - 1] = slugified;
       redirect = `/${parts.join('/')}`;
     }
